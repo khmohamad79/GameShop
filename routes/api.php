@@ -18,6 +18,22 @@ use App\Http\Controllers\Api\AuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::group([
+    'middleware' => [
+        'auth:sanctum'
+    ],
+], 
+function () {
+    Route::group([
+            'prefix'    => 'user-panel',
+            'name'      => 'user-panel.'
+        ],
+        function () {
+            Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password');
+        }
+    );
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends ApiController
 {
@@ -47,5 +49,18 @@ class AuthController extends ApiController
                  'token' => $token->plainTextToken];
 
         return $this->makeSuccessResponse('Welcome!', $data);
+    }
+
+    public function changePassword(ChangePasswordRequest $changePasswordRequest, AuthService $authService): JsonResponse
+    {
+        $user = Auth::user();
+        $originalPassword = $changePasswordRequest->originalPassword();
+        $password = $changePasswordRequest->password();
+
+        if ($authService->tryChangePassword($user, $originalPassword, $password)) {
+            return $this->makeSuccessResponse('Password changed successfully.', []);
+        }
+
+        return $this->makeFailureResponse('Failed to changed password.');
     }
 }

@@ -32,4 +32,16 @@ class AuthService
 
         return null;
     }
+
+    public function tryChangePassword(User $user, string $original_password, string $password): bool
+    {
+        if (!Hash::check($original_password, $user->password)) {
+            return false;
+        }
+
+        $user->password = Hash::make($password);
+        $user->save();
+        
+        return true;
+    }
 } 
