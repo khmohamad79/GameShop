@@ -32,6 +32,8 @@ function () {
             Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change-password');
         }
     );
+
+    Route::post('/create-company', [AuthController::class, 'createCompany'])->name('create-company');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

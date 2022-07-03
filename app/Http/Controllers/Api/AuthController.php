@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\CreateCompanyRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\Company;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -62,5 +64,14 @@ class AuthController extends ApiController
         }
 
         return $this->makeFailureResponse('Failed to changed password.');
+    }
+
+    public function createCompany(CreateCompanyRequest $createCompanyRequest): JsonResponse
+    {
+        $companyData = $createCompanyRequest->validated();
+
+        $company = Company::create($companyData);
+
+        return $this->makeSuccessResponse('company created successfully.', [$company]);
     }
 }
